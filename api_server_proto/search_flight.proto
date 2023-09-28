@@ -1,0 +1,18 @@
+syntax = "proto3";
+option go_package = "./server_proto";
+
+message SearchOneWayFlightRequest {
+    string DepartureDate = 1;
+    string OriginLocationCode = 2;
+    string DestinationLocationCode = 3;
+}
+
+message SearchOneWayFlightResponse {
+    string DepartureTime = 1;
+    string ArrivalTime = 2;
+    string FlightIdentification = 3;
+}
+
+service SearchFlightService {
+    rpc SearchOneWay(SearchOneWayFlightRequest) returns (SearchOneWayFlightResponse) {}
+}

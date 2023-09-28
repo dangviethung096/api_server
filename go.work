@@ -1,0 +1,7 @@
+go 1.21.1
+
+use (
+	./api_server_core
+	./api_server_proto
+	./search_flight
+)

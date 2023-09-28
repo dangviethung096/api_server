@@ -1,0 +1,7 @@
+syntax = "proto3";
+option go_package = "./server_proto";
+
+
+message Context {
+    uint64 RequestID = 1;
+}
