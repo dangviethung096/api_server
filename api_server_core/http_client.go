@@ -2,6 +2,7 @@ package core
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"net/http"
 )
@@ -10,7 +11,7 @@ func HttpRequest(url string, method string, headers map[string]string, body []by
 	if body == nil {
 		body = []byte{}
 	}
-
+	fmt.Printf("Request: \n%s\n", string(body))
 	req, err := http.NewRequest(method, url, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, NewError(HttpErrorCodeInitRequestFail, err)
