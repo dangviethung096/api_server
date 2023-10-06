@@ -3,16 +3,16 @@ package amadeus
 import "encoding/xml"
 
 type SearchAirMultiAvailabitiyRequest struct {
-	XMLName xml.Name                       `xml:"soapenv:Envelope"`
-	Env     *string                        `xml:"xmlns:soapenv,attr"`
-	Sec     *string                        `xml:"xmlns:sec,attr"`
-	Link    *string                        `xml:"xmlns:link,attr"`
-	Ses     *string                        `xml:"xmlns:ses,attr"`
-	Header  *Header                        `xml:"soapenv:Header"`
-	Body    *SearchAirMultiAvailabitiyBody `xml:"soapenv:Body"`
+	XMLName xml.Name                              `xml:"soapenv:Envelope"`
+	Env     *string                               `xml:"xmlns:soapenv,attr"`
+	Sec     *string                               `xml:"xmlns:sec,attr"`
+	Link    *string                               `xml:"xmlns:link,attr"`
+	Ses     *string                               `xml:"xmlns:ses,attr"`
+	Header  *RequestHeader                        `xml:"soapenv:Header"`
+	Body    *SearchAirMultiAvailabitiyRequestBody `xml:"soapenv:Body"`
 }
 
-type SearchAirMultiAvailabitiyBody struct {
+type SearchAirMultiAvailabitiyRequestBody struct {
 	AirMultiAvailability *AirMultiAvailability `xml:"Air_MultiAvailability"`
 }
 

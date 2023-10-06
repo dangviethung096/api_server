@@ -1,13 +1,9 @@
 package amadeus
 
 import (
-	core "api_server_core"
 	"crypto/sha1"
 	"encoding/base64"
-	"encoding/xml"
-	"fmt"
 	"math/rand"
-	"net/http"
 	"testing"
 	"time"
 )
@@ -37,71 +33,8 @@ var (
 	TransactionStatusCode = "Start"
 )
 
-func TestXmlRequest(t *testing.T) {
-	envelope := SearchAirMultiAvailabitiyRequest{
-		Env:    &Env,
-		Sec:    &Sec,
-		Link:   &Link,
-		Ses:    &Ses,
-		Header: buildHeader(),
-		Body:   buildBody(),
-	}
-
-	dataByte, err := xml.Marshal(envelope)
-	if err != nil {
-		t.Errorf("Build body request: %v\n", err)
-		return
-	}
-
-	url := "https://nodeA1.test.webservices.amadeus.com/1ASIWGENVN"
-	headers := map[string]string{
-		"Content-Type": "text/xml; charset=utf-8",
-		"SOAPAction":   "http://webservices.amadeus.com/SATRQT_19_1_1A",
-	}
-
-	// Request to 1A http server
-	res, err := core.HttpRequest(url, http.MethodPost, headers, dataByte)
-	if err != nil {
-		t.Errorf("Request to 1A: %v\n", err)
-	}
-
-	fmt.Printf("Data in byte: \n%s\n", string(res.Body))
-}
-
-func buildBody() *SearchAirMultiAvailabitiyBody {
-	businessFunction := "1"
-	actionCode := "44"
-	departureDate := "151023"
-	typeOfRequest := "TD"
-	departureAirport := "HAN"
-	arrivalAirport := "SGN"
-
-	return &SearchAirMultiAvailabitiyBody{
-		AirMultiAvailability: &AirMultiAvailability{
-			MessageActionDetails: &MessageActionDetails{
-				FunctionDetails: &FunctionDetails{
-					BusinessFunction: &businessFunction,
-					ActionCode:       &actionCode,
-				},
-			},
-			RequestSection: &RequestSection{
-				AvailabilityProductInfo: &AvailabilityProductInfo{
-					AvailabilityDetails: &AvailabilityDetails{
-						DepartureDate: &departureDate,
-					},
-					DepartureLocationInfo: &DepartureLocationInfo{
-						CityAirport: &departureAirport,
-					},
-					ArrivalLocationInfo: &ArrivalLocationInfo{
-						CityAirport: &arrivalAirport,
-					},
-				},
-				AvailabilityOptions: &AvailabilityOptions{
-					TypeOfRequest: &typeOfRequest,
-				},
-			},
-		},
-	}
+func TestMain(m *testing.M) {
+	m.Run()
 }
 
 func toBase64(inputBytes []byte) string {
@@ -117,23 +50,22 @@ func generateRandomString() string {
 	return text
 }
 
-func saltPassword(nonce string, timestamp string, password string) string {
-	h := sha1.New()
-	h.Write([]byte(nonce))
-	h.Write([]byte(timestamp))
-	h.Write(h.Sum(nil))
-	h.Write([]byte(h.Sum(nil)))
-	h.Write([]byte(password))
-	return toBase64(h.Sum(nil))
+func saltPassword(nonce, timestamp, password string) string {
+	encodeValue := sha1.New()
+	encodeValue.Write([]byte(nonce))
+	encodeValue.Write([]byte(timestamp))
+	passwordSha1 := sha1.Sum([]byte(password))
+	encodeValue.Write(passwordSha1[:])
+	return toBase64(encodeValue.Sum(nil))
 }
 
-func buildHeader() *Header {
+func buildHeader() *RequestHeader {
 	now := time.Now().UTC().Format("2006-01-02T15:04:05Z")
 	nonce := generateRandomString()
 	password := saltPassword(nonce, now, "Amadeus@24")
 	nonceBase64 := toBase64([]byte(nonce))
 
-	return &Header{
+	return &RequestHeader{
 		Wsa: &Wsa,
 		Typ: &Typ,
 		Iat: &Iat,

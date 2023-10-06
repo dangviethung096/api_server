@@ -2,17 +2,17 @@ package amadeus
 
 import "encoding/xml"
 
-type Envelope struct {
-	XMLName xml.Name    `xml:"soapenv:Envelope"`
-	Env     *string     `xml:"xmlns:soapenv,attr"`
-	Sec     *string     `xml:"xmlns:sec,attr"`
-	Link    *string     `xml:"xmlns:link,attr"`
-	Ses     *string     `xml:"xmlns:ses,attr"`
-	Header  *Header     `xml:"soapenv:Header"`
-	Body    interface{} `xml:"soapenv:Body"`
+type RequestEnvelope struct {
+	XMLName xml.Name       `xml:"soapenv:Envelope"`
+	Env     *string        `xml:"xmlns:soapenv,attr"`
+	Sec     *string        `xml:"xmlns:sec,attr"`
+	Link    *string        `xml:"xmlns:link,attr"`
+	Ses     *string        `xml:"xmlns:ses,attr"`
+	Header  *RequestHeader `xml:"soapenv:Header"`
+	Body    interface{}    `xml:"soapenv:Body"`
 }
 
-type Header struct {
+type RequestHeader struct {
 	Wsa                   *string                `xml:"xmlns:wsa,attr"`
 	Typ                   *string                `xml:"xmlns:typ,attr"`
 	Iat                   *string                `xml:"xmlns:iat,attr"`
